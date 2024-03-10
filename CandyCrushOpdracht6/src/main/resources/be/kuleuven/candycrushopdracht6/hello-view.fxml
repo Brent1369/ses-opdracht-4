@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="paneel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="308.0" prefWidth="548.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.kuleuven.candycrushopdracht6.HelloController">
+  <children>
+    <Button id="startButton" fx:id="startButton" layoutX="321.0" layoutY="20.0" mnemonicParsing="false" onAction="#LoginButton" text="Start" />
+    <AnchorPane fx:id="speelbord" layoutX="95.0" layoutY="67.0" prefHeight="200.0" prefWidth="200.0" visible="false" />
+    <Label id="loginText" fx:id="loginText" layoutX="51.0" layoutY="24.0" text="Login" />
+    <TextField id="nameInput" fx:id="nameInput" layoutX="120.0" layoutY="20.0" />
+    <Label id="playerAndScore" fx:id="playerAndScore" layoutX="328.0" layoutY="115.0" />
+      <Label id="score" fx:id="score" layoutX="321.0" layoutY="167.0" text="score" visible="false" />
+      <Button id="reset" fx:id="reset" layoutX="316.0" layoutY="67.0" mnemonicParsing="false" onAction="#ResetButton" text="reset" visible="false" />
+  </children>
+</AnchorPane>

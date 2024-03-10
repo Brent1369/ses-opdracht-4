@@ -6,7 +6,8 @@ import java.util.List;
 
 public class CheckNeighboursInGrid {
 
-    /**
+    /**./gradlew jar
+
      * This method takes a 1D Iterable and an element in the array and gives back an iterable containing the indexes of all neighbours with the same value as the specified element
      *@return - Returns a 1D Iterable of ints, the Integers represent the indexes of all neighbours with the same value as the specified element on index 'indexToCheck'.
      *@param grid - This is a 1D Iterable containing all elements of the grid. The elements are integers.
@@ -20,6 +21,7 @@ public class CheckNeighboursInGrid {
 
         ArrayList<Integer> result = new ArrayList<Integer>();
         ArrayList<Integer> gridArrayList = new ArrayList<Integer>();
+
 
         for (Integer element : grid) {
             gridArrayList.add(element);
