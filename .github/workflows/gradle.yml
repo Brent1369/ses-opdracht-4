@@ -31,6 +31,8 @@ jobs:
     # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
 
+    - name: change directory for build gradle
+    - run: cd CandyCrushOpdracht6
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
