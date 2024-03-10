@@ -31,11 +31,9 @@ jobs:
     # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
 
-    - name: change directory for build gradle
-      run: cd CandyCrushOpdracht6
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: cd CandyCrushOpdracht6 && ./gradlew build
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
