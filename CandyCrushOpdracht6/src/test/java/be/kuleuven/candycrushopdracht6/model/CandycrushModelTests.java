@@ -18,7 +18,7 @@ public class CandycrushModelTests {
         CandycrushModel model = new CandycrushModel("test");
         model.setScore(10);
         int result = model.getScore();
-        assert (result == 10);
+        assert (result == 9);
     }
 
     @Test
