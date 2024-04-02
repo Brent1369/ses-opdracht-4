@@ -11,7 +11,7 @@ import be.kuleuven.candycrushopdracht6.model.CandycrushModel.*;
 public class Board <E>{
 
     BoardSize boardSize;
-    ArrayList<E> cells;
+    private ArrayList<E> cells;
 
 
     public Board(BoardSize size){
@@ -26,6 +26,10 @@ public class Board <E>{
 
     public E getCellAt(Position position){
         return cells.get(position.toIndex());
+    }
+
+    public ArrayList<E> getAllCells(){
+        return cells;
     }
 
     public void replaceCellAt(Position position, E newCell){

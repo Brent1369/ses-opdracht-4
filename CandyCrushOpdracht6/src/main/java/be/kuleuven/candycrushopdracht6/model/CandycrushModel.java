@@ -52,7 +52,7 @@ public class CandycrushModel {
     }
 
     public ArrayList<Candy> getSpeelbord() {
-        return speelbordCandy.cells;
+        return speelbordCandy.getAllCells();
     }
 
     public int getWidth() {
@@ -76,7 +76,8 @@ public class CandycrushModel {
 
             Random random = new Random();
             Candy candy = createRandomCandy();
-            speelbordCandy.cells.set(index, candy);
+            //speelbordCandy.cells.set(index, candy);
+            speelbordCandy.replaceCellAt(Position.fromIndex(index, boardsize), candy);
             score++;
             int i = 0;
             for(Position neighbour : directNeighbours) {
@@ -87,7 +88,7 @@ public class CandycrushModel {
                 for(Position neighbour : directNeighbours) {
 
                     candy = createRandomCandy();
-                    speelbordCandy.cells.set(neighbour.toIndex(), candy);
+                    speelbordCandy.replaceCellAt(neighbour, candy);
                 }
                 score= score + i;
             }
@@ -145,7 +146,7 @@ public class CandycrushModel {
 
         for(int i = 0; i < 8; i++){
 
-            if(cellEqualsIterable(speelbordCandy.cells, boardsize.Width(), boardsize.Height(), position.toIndex(), position.toIndex() + directions[i])){
+            if(cellEqualsIterable(speelbordCandy.getAllCells(), boardsize.Width(), boardsize.Height(), position.toIndex(), position.toIndex() + directions[i])){
 
                 result.add(Position.fromIndex(position.toIndex() + directions[i], boardsize));
                 //result.add(position.toIndex() + directions[i]);
