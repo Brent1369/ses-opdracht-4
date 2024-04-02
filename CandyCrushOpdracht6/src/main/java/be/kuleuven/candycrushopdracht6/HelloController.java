@@ -1,17 +1,21 @@
 package be.kuleuven.candycrushopdracht6;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 
-import be.kuleuven.candycrushopdracht6.model.CandycrushModel;
+import be.kuleuven.candycrushopdracht6.model.*;
 import be.kuleuven.candycrushopdracht6.view.CandycrushView;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class HelloController {
 
@@ -100,4 +104,8 @@ public class HelloController {
         loginText.setVisible(true);
         update();
     }
+
+
+
+
 }

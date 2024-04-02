@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.List;
 
 
-import static be.kuleuven.candycrush.CheckNeighboursInGrid.getSameNeighboursIds;
 
 
 public class HelloApplication extends Application {

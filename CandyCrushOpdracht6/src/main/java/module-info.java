@@ -5,10 +5,8 @@ module be.kuleuven.candycrushopdracht6 {
     requires org.controlsfx.controls;
 
 
-    requires be.kuleuven.candycrush;
 
 
-    //requires be.kuleuven.candycrush;
 
 
 
