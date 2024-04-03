@@ -3,6 +3,7 @@ package be.kuleuven.candycrushopdracht6.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class BoardTest {
@@ -33,4 +34,19 @@ public class BoardTest {
             assert (board.getCellAt(Position.fromIndex(i, boardsize))  == board2.getCellAt(Position.fromIndex(i, boardsize)));
         }
     }
+
+/*
+    @Test
+    public void getPositionsOfElementTest(){
+        Function<Position, Candy> cellCreator = position -> CandycrushModel.createRandomCandy();
+        BoardSize boardsize = new BoardSize(5,5);
+        Board<Candy> board = new Board<Candy>(boardsize);
+        board.fill(cellCreator);
+        List<Position> PositionsKea = board.getPositionsOfElement(new kea());
+
+        PositionsKea.set(0, Position.fromIndex(1,boardsize));
+
+        int test = 0;
+        assert(1==1);
+    }*/
 }
