@@ -1,6 +1,7 @@
 package be.kuleuven.candycrushopdracht6.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public record BoardSize(int Width, int Height) {
     public BoardSize {
@@ -13,7 +14,7 @@ public record BoardSize(int Width, int Height) {
         }
     }
 
-    Iterable<Position> positions() {
+    Collection<Position> positions() {
         ArrayList<Position> allPositions = new ArrayList<>();
 
         for (int i = 0; i < Height; i++) {

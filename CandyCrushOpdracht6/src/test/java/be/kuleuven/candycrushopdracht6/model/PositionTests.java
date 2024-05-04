@@ -3,6 +3,9 @@ package be.kuleuven.candycrushopdracht6.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,5 +55,34 @@ public class PositionTests {
 
         assert (positionVar.isLastColumn());
     }
+
+
+
+
+    //manual debug
+    @Test
+    public void walkLefttest()
+    {
+        BoardSize board = new BoardSize(4,4);
+        Position positionVar = new Position(board, 1, 3);
+        Stream<Position> test = positionVar.walkDown();
+        test.forEach(position -> System.out.println(position));
+        int a = 1;
+        assert (1==1);
+    }
+
+    //manual debug
+    @Test
+    public void findAllMatchesTest()
+    {
+        //BoardSize board = new BoardSize(6,6);
+        CandycrushModel model = new CandycrushModel("d");
+
+        Set<List<Position>> matches =  model.findAllMatches();
+
+        int a = 1;
+        assert (1==1);
+    }
+
 
 }

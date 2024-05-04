@@ -1,9 +1,9 @@
 package be.kuleuven.candycrushopdracht6.model;
 
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 
 public class CandycrushModel {
@@ -171,5 +171,80 @@ public class CandycrushModel {
     }
 
 
+    Set<List<Position>> findAllMatches(){
+//dit zijn startposties van lagner dan 3 maar moet lijst hiervan zijn
+
+        Set<List<Position>> AllMatches = new HashSet<>();
+
+        //List<Position> teettt = horizontalStartingPositions().toList();
+
+        Stream<List<Position>> MatchesHorizontalStream = horizontalStartingPositions()  //.filter(position -> longestMatchToRight(position).size() >= 3)
+                .map(this::longestMatchToRight)
+                .filter(listPositions -> listPositions.size() >= 3);
+
+        Stream<List<Position>> MatchesVerticalStream = verticalStartingPositions()  //.filter(position -> longestMatchToRight(position).size() >= 3)
+                .map(this::longestMatchDown)
+                .filter(listPositions -> listPositions.size() >= 3);
+
+
+
+        //List<List<Position>> teessstt = MatchesHorizontalStream.toList();
+
+        //ArrayList<Candy> allcelss = speelbordCandy.getAllCells();
+
+        Stream<List<Position>> AllMatchesStream = Stream.concat(MatchesHorizontalStream, MatchesVerticalStream);
+
+        AllMatches.addAll(AllMatchesStream.toList());
+
+        //int testtt = AllMatches.size();
+
+        return  AllMatches;
+
+    }
+
+
+    boolean firstTwoHaveCandy(Candy candy, Stream<Position> positions){
+
+        //if(positions.takeWhile(position -> speelbordCandy.getCellAt(position) == candy)
+         //       .count() >= 2)
+        //{
+        //    return true;
+        //}else{
+        //    return false;
+        //}
+
+        return positions.limit(2)
+                .allMatch(position -> speelbordCandy.getCellAt(position).equals(candy));
+    }
+
+
+    Stream<Position> horizontalStartingPositions(){ // links ander snoepje
+        //check of er wel een staat
+        return boardsize.positions().stream().filter(position -> !firstTwoHaveCandy(speelbordCandy.getCellAt(position), position.walkLeft()) || position.kolom()==0);
+
+    }
+
+
+    Stream<Position> verticalStartingPositions(){ // boven ander snoepje
+
+        return boardsize.positions().stream().filter(position -> !firstTwoHaveCandy(speelbordCandy.getCellAt(position), position.walkUp()) || position.rij()==0);
+
+    }
+
+    List<Position> longestMatchToRight(Position pos){
+
+        return pos.walkRight()
+                .takeWhile(position2 -> speelbordCandy.getCellAt(pos).equals(speelbordCandy.getCellAt(position2)))
+                .toList();
+
+    }
+
+    List<Position> longestMatchDown(Position pos){
+
+        return pos.walkDown()
+                .takeWhile(position2 -> speelbordCandy.getCellAt(pos).equals(speelbordCandy.getCellAt(position2)))
+                .toList();
+
+    }
 
 }

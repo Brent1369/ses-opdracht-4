@@ -2,6 +2,7 @@ package be.kuleuven.candycrushopdracht6.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public record Position(BoardSize board, int rij, int kolom) {
 
@@ -54,5 +55,36 @@ public record Position(BoardSize board, int rij, int kolom) {
         return kolom == board.Width() - 1;
     }
 
+
+    public Stream<Position> walkLeft(){
+
+        //return board.positions().stream()
+        //        .filter( position -> position.kolom>=0 && position.rij == rij) //alleen geldige
+        //        .sort
+
+        return Stream.iterate(this, position -> new Position(board, position.rij, position.kolom-1))
+                .limit(kolom+1);
+    }
+
+
+    public Stream<Position> walkRight(){
+
+        return Stream.iterate(this, position -> new Position(board, position.rij, position.kolom+1))
+                .limit(board.Width()-kolom);
+
+    }
+
+    public Stream<Position> walkUp(){
+
+        return Stream.iterate(this, position -> new Position(board, position.rij-1, position.kolom))
+                .limit(rij+1);
+    }
+
+    public Stream<Position> walkDown(){
+
+        return Stream.iterate(this, position -> new Position(board, position.rij+1, position.kolom))
+                .limit(board.Height()-rij);
+
+    }
 
 }
