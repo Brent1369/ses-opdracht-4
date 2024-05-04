@@ -1,6 +1,8 @@
 package be.kuleuven.candycrushopdracht6.model;
 
 
+import javafx.stage.PopupWindow;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -169,6 +171,65 @@ public class CandycrushModel {
         }
 
     }
+
+    void clearMatch(List<Position> match){
+
+        Position firstpos = match.getFirst();
+        if(firstpos == null){
+            speelbordCandy.replaceCellAt(match.getFirst(), null);
+            match.removeFirst();
+            clearMatch(match);
+        }else{
+            speelbordCandy.replaceCellAt(match.getFirst(), null);
+        }
+    }
+
+    void fallDownTo(Position pos){
+
+        if(speelbordCandy.getCellAt(pos) == null){ // if current cell is empty
+
+            while(true){
+                Candy CandyAbove = speelbordCandy.getCellAt(new Position(boardsize, pos.rij() -1, pos.kolom()));
+                if(CandyAbove != null){
+                    speelbordCandy.replaceCellAt(pos, CandyAbove);
+                }else if(pos.rij() == 0){// if top reached and no more cells to fall -> exit function
+                    break;
+                }
+            }
+
+        }else{ // cell is not empty
+            if(pos.rij() == 0){ // if row is top row -> dont call function again and stop
+
+            }else{
+                fallDownTo(new Position(boardsize, pos.rij() -1, pos.kolom()));
+            }
+        }
+    }
+
+    boolean updateBoard(){
+
+        Set<List<Position>> matches = findAllMatches();
+
+        if(matches.size() == 0){
+            return false;
+        }
+
+        for(List<Position> match : matches){ // first remove all matches
+            clearMatch(match);
+        }
+
+        for(List<Position> match : matches){ //drop all
+            for(int i =0; i < match.size(); i++)         // go through every position of a match
+                fallDownTo(match.get(i));
+        }
+
+
+        updateBoard();
+
+        return true;
+
+    }
+
 
 
     Set<List<Position>> findAllMatches(){
