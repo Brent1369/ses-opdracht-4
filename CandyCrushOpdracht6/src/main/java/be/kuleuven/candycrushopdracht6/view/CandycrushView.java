@@ -83,6 +83,10 @@ public class CandycrushView extends Region {
 
         int a = 0;
 
+        if(candy==null){
+            return new Rectangle(widthCandy,widthCandy, Color.WHITE);
+        }
+
         return switch(candy){
             case NormalCandy(int color) ->
                 switch (color){

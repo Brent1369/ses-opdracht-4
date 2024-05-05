@@ -11,15 +11,26 @@ import java.util.stream.Stream;
 public class CandycrushModel {
     private String speler;
 
-    public BoardSize boardsize = new BoardSize(5, 5);
+    public BoardSize boardsize;// = new BoardSize(4, 4);
     private int score;
 
     //private ArrayList<Candy> speelbordCandy;
     Function<Position, Candy> cellCreator = position -> CandycrushModel.createRandomCandy();
-    Board<Candy> speelbordCandy = new Board<Candy>(boardsize);
+    Board<Candy> speelbordCandy;// = new Board<Candy>(boardsize);
 
-    public CandycrushModel(String speler) {
-        this.speler = speler;
+
+    public void setCandyAt(Position pos, Candy candy){
+        speelbordCandy.replaceCellAt(pos, candy);
+    }
+
+
+
+    public CandycrushModel(BoardSize boardsize) {
+        //this.speler = speler;
+
+        this.boardsize = boardsize;
+        speelbordCandy = new Board<Candy>(boardsize);
+
 
         speelbordCandy.fill(cellCreator);
 
@@ -80,7 +91,8 @@ public class CandycrushModel {
             Candy candy = createRandomCandy();
             //speelbordCandy.cells.set(index, candy);
             speelbordCandy.replaceCellAt(Position.fromIndex(index, boardsize), candy);
-            score++;
+
+            /*score++;
             int i = 0;
             for(Position neighbour : directNeighbours) {
 
@@ -93,7 +105,9 @@ public class CandycrushModel {
                     speelbordCandy.replaceCellAt(neighbour, candy);
                 }
                 score= score + i;
-            }
+            }*/
+
+            score += updateBoard();
 
 
         }else{
@@ -174,59 +188,299 @@ public class CandycrushModel {
 
     void clearMatch(List<Position> match){
 
-        Position firstpos = match.getFirst();
-        if(firstpos == null){
+        //Position firstpos = match.getFirst();
+        if(match.size() != 0){
             speelbordCandy.replaceCellAt(match.getFirst(), null);
-            match.removeFirst();
-            clearMatch(match);
+            //match.removeFirst();
+            List<Position> match2 = match.stream().skip(1).toList(); // remove first one
+            clearMatch(match2);
         }else{
-            speelbordCandy.replaceCellAt(match.getFirst(), null);
+            //speelbordCandy.replaceCellAt(match.getFirst(), null);
+            //stop
         }
     }
 
     void fallDownTo(Position pos){
 
-        if(speelbordCandy.getCellAt(pos) == null){ // if current cell is empty
+        if(speelbordCandy.getCellAt(pos) == null && pos.rij() != 0){ // if current cell is empty
+            Position pos2 = new Position(boardsize, pos.rij() -1, pos.kolom());
+            while(true){ // check if any above current cell can fall down
 
-            while(true){
-                Candy CandyAbove = speelbordCandy.getCellAt(new Position(boardsize, pos.rij() -1, pos.kolom()));
-                if(CandyAbove != null){
-                    speelbordCandy.replaceCellAt(pos, CandyAbove);
-                }else if(pos.rij() == 0){// if top reached and no more cells to fall -> exit function
+                Candy CandyAbove = speelbordCandy.getCellAt(pos2);
+
+                if(CandyAbove != null){ // if there is no candy
+                    speelbordCandy.replaceCellAt(pos, CandyAbove); //replace candy with candy above
+                    speelbordCandy.replaceCellAt(pos2, null); //remove candy above
+                    fallDownTo(new Position(boardsize, pos.rij() -1, pos.kolom())); // check cell above
                     break;
+                }else{
+                    if(pos2.rij() == 0){
+                        break;
+                    }
+                    pos2 = new Position(boardsize, pos2.rij() -1, pos2.kolom()); // go up more
                 }
+
             }
 
-        }else{ // cell is not empty
+        }else{ // cell contains candy
             if(pos.rij() == 0){ // if row is top row -> dont call function again and stop
 
             }else{
-                fallDownTo(new Position(boardsize, pos.rij() -1, pos.kolom()));
+                fallDownTo(new Position(boardsize, pos.rij() -1, pos.kolom())); // check cell above
             }
         }
     }
 
-    boolean updateBoard(){
+    int updateBoard(){
+
+        int score = 0;
 
         Set<List<Position>> matches = findAllMatches();
 
+
+
         if(matches.size() == 0){
-            return false;
+            return 0;
         }
 
         for(List<Position> match : matches){ // first remove all matches
             clearMatch(match);
+            score = score + match.size();
         }
 
         for(List<Position> match : matches){ //drop all
-            for(int i =0; i < match.size(); i++)         // go through every position of a match
+            for(int i =0; i < match.size(); i++) {       // go through every position of a match
                 fallDownTo(match.get(i));
+
+            }
         }
 
 
-        updateBoard();
+        score = score + updateBoard();
+
+        return score;
+
+    }
+/*
+    interface PartialSolution {
+        boolean isComplete();
+        //boolean shouldAbort();
+        //Board<Candy>  speelbord = clone(speelbordCandy);
+
+        //int currentscore =0;
+
+      //  Collection<Extension> extensions();
+       // Solution toSolution();
+       // boolean canImproveUpon(Solution solution);
+    }
+
+
+
+    public interface Extension {
+        void apply(PartialSolution solution);
+        void undo(PartialSolution solution);
+    }
+
+    interface Solution {
+        boolean isBetterThan(Solution other);
+    }
+*/
+    int bestScore = 0;
+    int bestwissel = 0;
+
+    //List<Integer> solutions = new ArrayList<>();
+
+    List<Position[]> BestSwitchSequence = new ArrayList<>();
+
+    private int findOptimalScore(boolean done, int currentScore, Board<Candy> speelbord, int wissels, List<Position[]> SwitchSequence){
+
+
+        if(done){
+            //solutions.add(currentScore);
+            if(currentScore > bestScore) {
+                bestScore = currentScore;
+                bestwissel = wissels;
+                BestSwitchSequence = new ArrayList<>(SwitchSequence);
+            }else if(currentScore == bestScore){
+                if(wissels<bestwissel){
+                    bestwissel = wissels;
+                }
+            }
+            return bestScore;
+        }
+
+        /*if(wissels > bestwissel){
+            //   bestwissel = wissels;
+        }*/
+
+
+        //boolean prevDone = done;
+        //speelbord.copyTo(speelbordCandy);
+
+
+
+        /*if (current.isComplete()) {
+            var solution = current.toSolution();
+            if (bestSoFar == null || solution.isBetterThan(bestSoFar)) {
+                return solution;
+            } else {
+                return bestSoFar;
+            }
+        }
+
+        if (current.shouldAbort() ||
+                (bestSoFar != null && !current.canImproveUpon(bestSoFar))) {
+            return bestSoFar;
+        }*/
+
+         //if(done)
+
+
+
+        Position currentpos;
+        Position pos2;
+
+        for(int j = 0; j < boardsize.Height(); j++){
+
+            for(int i = 0; i < boardsize.Width(); i++){
+                currentpos = new Position(boardsize, j, i);
+                for(int c = 0; c < 4; c++){
+                    switch(c) {
+                        case 0:
+                            if (currentpos.kolom() == 0) {pos2 = null;break;}
+                            pos2 = new Position(boardsize, currentpos.rij(), currentpos.kolom() - 1); //left
+                            break;
+                        case 1:
+                            if (currentpos.kolom() == boardsize.Width() - 1) {pos2 = null;break;}
+                            pos2 =new Position(boardsize, currentpos.rij(), currentpos.kolom() + 1);//right
+                            break;
+                        case 2:
+                            if (currentpos.rij() == 0) {pos2 = null;break;}
+                            pos2 = new Position(boardsize, currentpos.rij() - 1, currentpos.kolom());//top
+                            break;
+                        case 3:
+                            if (currentpos.rij() == boardsize.Height() - 1) {pos2 = null;break;}
+                            pos2 =new Position(boardsize, currentpos.rij() + 1, currentpos.kolom());//bottom
+                            break;
+                        default:
+                            pos2 = null;
+                    }
+                    /*
+                    if(i == boardsize.Width()-1 && j == boardsize.Height()-1){
+                        int a = 1;
+                    }
+
+                    if(i == 1 && j ==2 && c == 3 && wissels ==0){
+                        int a = 1;
+                        //testthingy++;
+                    }
+                    if(i == 1 && j ==1 && c == 0 && wissels ==1
+                            && speelbordCandy.getCellAt(new Position(boardsize, 0, 0)) == null
+                            && speelbordCandy.getCellAt(new Position(boardsize, 1, 0)) == null
+                            && speelbordCandy.getCellAt(new Position(boardsize, 2, 0)) == null
+                    ){
+                        int a = 1;
+                        //testthingy++;
+                    }
+                    if(i == 1 && j ==2 && c == 3 && wissels ==2){
+                        ArrayList<Candy> testtt = speelbordCandy.getAllCells();
+                        int a = 1;
+                    }*/
+
+                    if(pos2 != null) { // if pos2 is not invalid
+                        if (matchAfterSwitch(currentpos, pos2)) {
+                            //make choices
+
+                            //save old
+                            Board<Candy> vorigspeelbord = new Board<>(speelbord.boardSize);
+                            speelbordCandy.copyTo(vorigspeelbord); // = speelbordCandy
+                            int prevscore = currentScore;
+
+
+                            //execute
+                            SwitchSequence.add(new Position[]{currentpos, pos2});
+                            switchCandies(currentpos, pos2);
+                            currentScore += updateBoard();
+                            wissels++;
+                            findOptimalScore(done, currentScore, speelbordCandy, wissels, SwitchSequence);
+
+
+                            //backtrack
+                            SwitchSequence.removeLast();
+                            vorigspeelbord.copyTo(speelbordCandy);
+                            currentScore = prevscore;
+                            wissels--;
+
+
+
+                            //done = prevDone;// not necessary
+
+                        } else {
+                            done = true;
+                            findOptimalScore(done, currentScore, speelbord, wissels, SwitchSequence);
+                            done = false;
+                        }
+                    }else{// if pos2 is invalid
+                        done = true;
+                        findOptimalScore(done, currentScore, speelbord, wissels, SwitchSequence);
+                        done = false;
+                    }
+
+                }
+            }
+        }
+
+        return bestScore;
+
+    }
+
+    int maximizeScore(BoardSize size){
+
+
+        int currentScore=0;
+        Board<Candy> speelbord = new Board<>(size);
+        speelbordCandy.copyTo(speelbord);
+        List<Position[]> SwitchSequence = new ArrayList<>();
+        int score = findOptimalScore(false, currentScore, speelbord, 0, SwitchSequence);
+        //int score = (updateBoard();
+        if(score == 0){
+
+        }
+        int ssss = 0;
+
+        return score;
+
+    }
+
+    Boolean switchCandies(Position pos1, Position pos2){
+
+        Candy candy1 = speelbordCandy.getCellAt(pos1);
+        Candy candy2 = speelbordCandy.getCellAt(pos2);
+
+        if(candy1 == null || candy2 == null){
+            return false;
+        }
+
+
+        speelbordCandy.replaceCellAt(pos1, candy2);
+        speelbordCandy.replaceCellAt(pos2, candy1);
 
         return true;
+    }
+
+    boolean matchAfterSwitch(Position pos1, Position pos2){
+
+        if(switchCandies(pos1,pos2) == false){
+            return false;
+        }
+        int matches = findAllMatches().size();
+        switchCandies(pos1,pos2);
+
+        if(matches == 0){
+            return false;
+        }else{
+            return true;
+        }
 
     }
 
@@ -275,7 +529,7 @@ public class CandycrushModel {
         //}
 
         return positions.limit(2)
-                .allMatch(position -> speelbordCandy.getCellAt(position).equals(candy));
+                .allMatch(position -> checkIfPositionContainsCandyType(position, candy));
     }
 
 
@@ -295,7 +549,7 @@ public class CandycrushModel {
     List<Position> longestMatchToRight(Position pos){
 
         return pos.walkRight()
-                .takeWhile(position2 -> speelbordCandy.getCellAt(pos).equals(speelbordCandy.getCellAt(position2)))
+                .takeWhile(position2 -> compareCandies(pos,position2))
                 .toList();
 
     }
@@ -303,9 +557,30 @@ public class CandycrushModel {
     List<Position> longestMatchDown(Position pos){
 
         return pos.walkDown()
-                .takeWhile(position2 -> speelbordCandy.getCellAt(pos).equals(speelbordCandy.getCellAt(position2)))
+                .takeWhile(position2 -> compareCandies(pos,position2))
                 .toList();
 
+    }
+
+    boolean checkIfPositionContainsCandyType(Position pos, Candy candy){
+        if(speelbordCandy.getCellAt(pos)==null|| candy == null){
+            return false;
+        }else if(speelbordCandy.getCellAt(pos).equals(candy)){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    boolean compareCandies(Position pos1, Position pos2){
+        if(speelbordCandy.getCellAt(pos1)==null||speelbordCandy.getCellAt(pos2)==null){
+            return false;
+        }else if(speelbordCandy.getCellAt(pos1).equals(speelbordCandy.getCellAt(pos2))){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

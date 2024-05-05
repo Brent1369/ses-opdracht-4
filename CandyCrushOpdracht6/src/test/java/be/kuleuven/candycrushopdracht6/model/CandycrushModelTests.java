@@ -7,7 +7,7 @@ public class CandycrushModelTests {
 
     @Test
     public void CreateGameWithNameAndCheckThatName(){
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
         String result = model.getSpeler();
         assert (result.equals("test"));
     }
@@ -15,7 +15,7 @@ public class CandycrushModelTests {
 
     @Test
     public void SetScoreAndCheckScore(){
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
         model.setScore(10);
         int result = model.getScore();
         assert (result == 10);
@@ -23,7 +23,7 @@ public class CandycrushModelTests {
 
     @Test
     public void getIndexFromRowColumnCheck(){//assume 4x4 grid
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
         int result = model.getIndexFromRowColumn(1,2);
         assert (result == 6);
@@ -31,7 +31,7 @@ public class CandycrushModelTests {
 
     @Test
     public void CheckWidth(){
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
         int result = model.getWidth();
         assert (result == 4);
@@ -40,7 +40,7 @@ public class CandycrushModelTests {
 
     @Test
     public void CheckHeight(){
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
         int result = model.getHeight();
         assert (result == 4);
@@ -49,7 +49,7 @@ public class CandycrushModelTests {
 
     @Test
     public void CheckBoardSize(){
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
         int result = model.getSpeelbord().size();
         assert (result == model.getHeight() * model.getWidth());
@@ -57,7 +57,7 @@ public class CandycrushModelTests {
 
     @Test
     public void testScoreAtStart(){
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
 
         int result = model.getScore();
@@ -68,7 +68,7 @@ public class CandycrushModelTests {
     @Test
     public void SelectCandyWithTooLowIndexIndexAndCheckIfScoreChange(){
 
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
         model.candyWithIndexSelected(-1);
 
@@ -80,7 +80,7 @@ public class CandycrushModelTests {
     @Test
     public void SelectCandyWithTooHighIndexIndexAndCheckIfScoreChange(){
 
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
         model.candyWithIndexSelected(model.getHeight() * model.getWidth() + 11);
 
@@ -91,7 +91,7 @@ public class CandycrushModelTests {
 
     @Test
     public void SelectCandyAndCheckIfScoreChange(){
-        CandycrushModel model = new CandycrushModel("test");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
         model.candyWithIndexSelected(0);
 

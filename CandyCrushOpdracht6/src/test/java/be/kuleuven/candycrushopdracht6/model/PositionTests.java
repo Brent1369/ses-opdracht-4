@@ -2,6 +2,7 @@ package be.kuleuven.candycrushopdracht6.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -76,13 +77,86 @@ public class PositionTests {
     public void findAllMatchesTest()
     {
         //BoardSize board = new BoardSize(6,6);
-        CandycrushModel model = new CandycrushModel("d");
+        CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
 
         Set<List<Position>> matches =  model.findAllMatches();
+
+
 
         int a = 1;
         assert (1==1);
     }
 
+
+    @Test
+    public void BackTrackTest()
+    {
+        //BoardSize board = new BoardSize(6,6);
+        CandycrushModel model = model2;
+
+        ArrayList<Candy> test = model.speelbordCandy.getAllCells();
+
+        int score = model.maximizeScore(model.boardsize);
+
+        //List<Integer> solutions =  model.solutions;
+        //int test = solutions.
+        int wissels  = model.bestwissel;
+
+        List<Position[]> BestSwitchSequence = model.BestSwitchSequence;
+
+        System.out.println(score);
+        System.out.println(wissels);
+
+        int a = 1;
+        assert (score == 24);
+        assert (wissels == 7);
+    }
+
+
+
+    private static Candy characterToCandy(char c) {
+        return switch(c) {
+            case 'o' -> new NormalCandy(0);
+            //case 'o' -> null;
+            case '*' -> new NormalCandy(1);
+            case '#' -> new NormalCandy(2);
+            case '@' -> new NormalCandy(3);
+            default -> throw new IllegalArgumentException("Unexpected value: " + c);
+        };
+    }
+    public static CandycrushModel createBoardFromString(String configuration) {
+        var lines = configuration.toLowerCase().lines().toList();
+        BoardSize size = new BoardSize(lines.size(), lines.getFirst().length());
+        var model = new CandycrushModel(size); // deze moet je zelf voorzien
+        for (int row = 0; row < lines.size(); row++) {
+            var line = lines.get(row);
+            for (int col = 0; col < line.length(); col++) {
+                model.setCandyAt(new Position(size, row, col), characterToCandy(line.charAt(col)));
+            }
+        }
+        return model;
+    }
+
+
+    CandycrushModel model1 = createBoardFromString("""
+   @@o#
+   o*#o
+   @@**
+   *#@@""");
+
+    CandycrushModel model2 = createBoardFromString("""
+   #oo##
+   #@o@@
+   *##o@
+   @@*@o
+   **#*o""");
+
+    CandycrushModel model3 = createBoardFromString("""
+   #@#oo@
+   @**@**
+   o##@#o
+   @#oo#@
+   @*@**@
+   *#@##*""");
 
 }
