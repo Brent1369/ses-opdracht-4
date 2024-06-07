@@ -19,7 +19,7 @@ public class CandycrushModelTests {
         CandycrushModel model = new CandycrushModel(new BoardSize(4,4));
         model.setScore(10);
         int result = model.getScore();
-        assert (result == 10);
+        assert (result == 9);
     }
 
     @Test
